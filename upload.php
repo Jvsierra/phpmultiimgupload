@@ -19,21 +19,26 @@
 </head>
 <body>
 <?php
-if(empty($_FILES)){
-	echo "<center><h1>Please, select the files</h1></center>";
-	}else{
-		foreach($_FILES['file']['name'] as $key => $name){
-			$_FILES['file']['size'][$key];
-			if($_FILES['file']['error'][$key] == 0 && move_uploaded_file($_FILES['file']['tmp_name'][$key],"files/{$_FILES['file']['name'][$key]}")){	  
-				$link = "files/" . $_FILES['file']['name'][$key];
-				$name = $_FILES['file']['name'][$key];
-				$uploaded[] = $name;
-				?>
-                
-                <?php
-				}
-			}
-		}
+if (empty($_FILES)) {
+  echo "<center><h1>Please, select the files</center>";
+} else {
+   $number_add = 0;
+    foreach ($_FILES['file']['name'] as $key => $name) {
+        $_FILES['file']['size'][$key];
+        if ($_FILES['file']['error'][$key] == 0) { 
+            if (!file_exists("files/" . $_FILES['file']['name'][$key])) {
+               $link = "files/" . $_FILES['file']['name'][$key];
+               $name = $_FILES['file']['name'][$key];
+            } else {
+               $link = "files/" . $number_add .'_'. $_FILES['file']['name'][$key];
+               $name = $number_add .'_'. $_FILES['file']['name'][$key];
+               $number_add++;
+            }
+            move_uploaded_file($_FILES['file']['tmp_name'][$key], $link);
+            $uploaded[] = $name;
+        }
+    }
+}
 ?>
 <br>
 <div class="container">
