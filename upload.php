@@ -19,20 +19,24 @@
 </head>
 <body>
 <?php
+date_default_timezone_set('America/Los_Angeles');
 if (empty($_FILES)) {
   echo "<center><h1>Please, select the files</center>";
 } else {
    $number_add = 0;
+   $length = 12;
+
+	
     foreach ($_FILES['file']['name'] as $key => $name) {
+    	$randomString = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
         $_FILES['file']['size'][$key];
         if ($_FILES['file']['error'][$key] == 0) { 
             if (!file_exists("files/" . $_FILES['file']['name'][$key])) {
-               $link = "files/" . $_FILES['file']['name'][$key];
-               $name = $_FILES['file']['name'][$key];
-            } else {
-               $link = "files/" . $number_add .'_'. $_FILES['file']['name'][$key];
-               $name = $number_add .'_'. $_FILES['file']['name'][$key];
-               $number_add++;
+               $link = "files/" . $randomString . $_FILES['file']['name'][$key];
+               $name = $_FILES['file']['name'][$key] . $randomString;
+            }else{
+            	$link = "files/" . $_FILES['file']['name'][$key] . $randomString;
+               $name = $_FILES['file']['name'][$key] . $randomString;
             }
             move_uploaded_file($_FILES['file']['tmp_name'][$key], $link);
             $uploaded[] = $name;
@@ -56,7 +60,7 @@ if (empty($_FILES)) {
 if(!empty($uploaded)){
 	foreach($uploaded as $name){
 		echo '<center>';
-		echo '<img src="files/', $name,'" class="img img-responsive" width="300" height="300">	' ;
+		echo '<a href="files/', $name, '"><img src="files/', $name,'" class="img img-responsive" width="300" height="300"></a>' ;
 		echo '<a href="files/', $name,'">', $name, '</a>';
 		echo '</center>';
 		
